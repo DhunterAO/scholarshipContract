@@ -1,0 +1,26 @@
+{
+  "name": "scholarshipcontract",
+  "version": "1.0.0",
+  "description": "tsinghua scholarship dApp",
+  "main": "contract_call_test.js",
+  "scripts": {
+    "test": "node contract_call_test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DhunterAO/scholarshipContract.git"
+  },
+  "keywords": [
+    "dApp",
+    "zkp"
+  ],
+  "author": "CoAuthor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DhunterAO/scholarshipContract/issues"
+  },
+  "homepage": "https://github.com/DhunterAO/scholarshipContract#readme",
+  "dependencies": {
+    "web3": "^1.3.0"
+  }
+}

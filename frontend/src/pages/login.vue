@@ -27,7 +27,7 @@
     name: 'login',
     data () {
       return {
-        loginTitle: '清清共享登录',
+        loginTitle: '奖学金系统登录',
         form: {
           name: '',
           pwd: ''

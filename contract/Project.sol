@@ -1,5 +1,7 @@
 pragma solidity >=0.5.0 <0.7.0;
 
+import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+
 contract Project {
     // create a new struct Scholar to store the information of scholar
     struct Scholar {
@@ -37,8 +39,12 @@ contract Project {
         receiver.transfer(amount);
     }
     
-    function verify(uint8 index, string memory proof) public returns (bool) {
-        // ...
+    function verify(uint8 index, string memory proof[9]) public returns (bool) {
+        // index: 第几个奖学金
+        // proof: 9个字符串形式uint256
+
+        
+
         return true;
     }
 

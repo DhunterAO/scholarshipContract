@@ -62,7 +62,7 @@
                 </el-form>
             </div>
         </div>
-            <!--<div id="add">
+            <div id="add">
                 <el-button @click="add_num">ADD</el-button>
                 <el-input-number
                     v-model="add_one"
@@ -72,7 +72,7 @@
                 ></el-input-number>
                 <span> = {{ add_res }}</span>
             </div>
-            -->
+            
     </div>
 </template>
 
@@ -93,7 +93,8 @@ export default {
           pub_addr: "",
           avail_scholarships: [],
           fileList: [],
-          selected_scholarship: ""
+          selected_scholarship: "",
+          proof_strs: ""
         }
     },
     methods:{
@@ -127,17 +128,38 @@ export default {
 
                 let read = new FileReader();
                 read.readAsBinaryString(file.raw);
+                let self = this;
                 read.onloadend = function(){
                     let result = read.result;
                     console.log(result.length);
-                    result = result.slice(0, result.length-3);
-                    console.log(result);
+                    //result = result.slice(0, result.length);
+                    //console.log(result);
+                    self.proof_strs = result.concat();
                 }
                 //fileList.push(file.name);
             }
         },
         submitApply(){
             //transfer pub_addr and proof to blockchain
+            let strs = [], begin = 0, end = 0;
+            console.log(this.proof_strs);
+            while(true){
+                begin = this.proof_strs.indexOf('"', end+1);
+                if(begin == -1) break;
+                end = this.proof_strs.indexOf('"', begin+1);
+                strs.push(this.proof_strs.substr(begin+1, end-begin));
+                //console.log(strs[strs.length - 1]);
+            }
+            //let proof1 = [strs[0], strs[1]];
+            //let proof2 = [[strs[2], strs[3]], [strs[4], strs[5]]];
+            //let proof3 = [strs[6], strs[7]];
+            //let proof4 = [strs[8]];
+            //console.log(proof1);
+            /*
+            this.auto_distribute(parseInt(selected_scholarship), 
+            strs[0], strs[1], strs[2], strs[3], strs[4], strs[5], strs[6], strs[7], strs[8], pub_addr)
+            .call().then(res => this.apply_res = res);
+            */
         }
     },
     computed:{
@@ -147,23 +169,26 @@ export default {
         }
     },
     created(){
-        
         // default scholarship list
+        
         this.avail_scholarships = [
             {
                 title: "钟士模奖学金",
+                price: 15000,
                 description: "钟士模奖学金是为了纪念XXX，钟士模先生是电机工程和自动控制工程学家，中国自动控制学科和教育的开拓者之一，XXX",
-                id: "045234"
+                id: "0"
             },
             {
                 title: "2020年研究生秋季奖学金",
+                price: 3000,
                 description: "2020年研究生秋季奖学金是XXX，总而言之还是非常厉害的XXX",
-                id: "143255"
+                id: "1"
             },
             {
                 title: "2020年国奖答辩",
-                description: "国家奖学金是XXX，作为大学生能获得国家奖学金是一项莫大的荣誉",
-                id: "254235"
+                price: 8000,
+                description: "国家奖学金，顾名思义，是国家发的奖学金，作为大学生能获得国家奖学金是一项莫大的荣誉",
+                id: "2"
             }
         ]
         // get available scholarship list from smart contract

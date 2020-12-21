@@ -28,16 +28,16 @@ contract Project {
     }
 
     // 验证学生并发放对应的奖学金
-    function auto_distribute(uint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1], string receiver_string) public payable returns (bool) {
+    function auto_distribute(uint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1], string memory receiver_string) public payable returns (bool) {
         // 验证零知识
-        bool success = verify(scholar_id, proof);
+        bool success = verify(scholar_id, proof1[2], proof2[2][2], proof3[2], proof4[1]);
         require(success == true, "Proof is not correct!");
         
 
-        address payable receiver = string2address(receiver_string);
+        address payable receiver = parseAddr(receiver_string);
 
         // 查询应发奖学金的数额
-        uint256 amount = scholar_list[scholar_id_list[index]].amount;
+        uint256 amount = scholar_list[scholar_id].amount;
         
         // 发放奖学金给学生
         receiver.transfer(amount);
@@ -47,16 +47,31 @@ contract Project {
         // index: 第几个奖学金
         // proof: 9个字符串形式uint256
         
-        bytes4 methodId = bytes4(keccak256("increaseAge(uint8,string)"));
+        bytes4 methodId = bytes4(keccak256("verifyTx(uint256[2],uint256[2][2],uint256[2],uint256[1])"));
         address contract_address = scholar_list[scholar_id].addr;
         
-        (bool success, bytes memory returnData) = contract_address.call(methodId, scholar_id, proof1[2], proof2[2][2], proof3[2], proof4[1]);
+        uint256 proof1_uint256[2];
+        proof1_uint256[0] = stringToUint256(proof1[0]);
+        proof1_uint256[1] = stringToUint256(proof1[1]);
+        uint256 proof2_uint256[2][2];
+        proof2_uint256[0][0] = stringToUint256(proof2[0][0]);
+        proof2_uint256[0][1] = stringToUint256(proof2[0][1]);
+        proof2_uint256[1][0] = stringToUint256(proof2[1][0]);
+        proof2_uint256[1][1] = stringToUint256(proof2[1][1]);
+        uint256 proof3_uint256[2];
+        proof3_uint256[0] = stringToUint256(proof3[0]);
+        proof3_uint256[1] = stringToUint256(proof3[1]);
+        uint256 proof4_uint256[1];
+        proof4_uint256[0] = stringToUint256(proof4[0]);
+        
+
+        (bool success, bytes memory returnData) = contract_address.call(methodId, proof1_uint256[2], proof2_uint256[2][2], proof3_uint256[2], proof4_uint256[1]);
 
         return success;
     }
 
 
-    function parseAddr(string memory _a) public pure returns (address _parsedAddress) {
+    function parseAddr(string memory _a) public pure returns (address payable _parsedAddress) {
         // https://ethereum.stackexchange.com/questions/67436/a-solidity-0-5-x-function-to-convert-adress-string-to-ethereum-address
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
@@ -83,5 +98,25 @@ contract Project {
             iaddr += (b1 * 16 + b2);
         }
         return address(iaddr);
+    }
+
+    function stringToUint256(string memory s) public returns (uint256 result) {
+        // https://ethereum.stackexchange.com/questions/62371/convert-a-string-to-a-uint256-with-error-handling
+        bytes memory b = bytes(s);
+        uint256 result = 0;
+        bool success = false;
+        uint256 tmp;
+        for (uint256 i = 0; i < b.length; i++) { 
+            tmp = uint256(uint8(b[i]));
+            if (tmp >= 48 && tmp <= 57) {
+                result = result * 10 + (tmp - 48); 
+                success = true;
+            } else {
+                result = 0;
+                success = false;
+                break;
+            }
+        }
+        return result;
     }
 }

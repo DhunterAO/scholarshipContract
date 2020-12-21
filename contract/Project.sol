@@ -63,7 +63,6 @@ contract Project {
         uint256[1] memory proof4_uint256;
         proof4_uint256[0] = stringToUint256(proof4[0]);
         
-        
         (bool success, bytes memory returnData) = contract1_address.call(abi.encode(methodId, scholar_id, proof1_uint256, proof2_uint256, proof3_uint256, proof4_uint256));
 
         return success;

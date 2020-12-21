@@ -42,8 +42,8 @@ contract Project {
     function verify(uint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1]) public returns (bool) {
         // index: 第几个奖学金
         // proof: 9个字符串形式uint256
-
-
+        
+        address contract_address = scholar_list[scholar_id].addr;
         
 
         return true;

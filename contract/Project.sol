@@ -28,7 +28,7 @@ contract Project {
     }
 
     // 验证学生并发放对应的奖学金
-    function auto_distribute(uint8 scholar_id, string memory proof, address payable receiver) public payable {
+    function auto_distributeuint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1], address payable receiver) public payable {
         // 验证零知识
         require(verify(scholar_id, proof) == true, "Proof is not correct!");
         
@@ -39,9 +39,10 @@ contract Project {
         receiver.transfer(amount);
     }
     
-    function verify(uint8 index, string memory proof[9]) public returns (bool) {
+    function verify(uint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1]) public returns (bool) {
         // index: 第几个奖学金
         // proof: 9个字符串形式uint256
+
 
         
 

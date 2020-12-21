@@ -7,6 +7,7 @@ contract Project {
         string name;
         string description;
         uint amount;
+        address addr;
     }
     
     uint8[] public scholar_id_list;
@@ -19,10 +20,15 @@ contract Project {
         
     }
 
+    function get_scholar_list() public {
+        return scholar_list 
+        }
+    }
+
     // 验证学生并发放对应的奖学金
-    function auto_distribute(uint8 index, string memory proof, address payable receiver) public payable {
+    function auto_distribute(uint8 scholar_id, string memory proof, address payable receiver) public payable {
         // 验证零知识
-        require(verify(index, proof) == true, "Proof is not correct!");
+        require(verify(scholar_id, proof) == true, "Proof is not correct!");
         
         // 查询应发奖学金的数额
         uint256 amount = scholar_list[scholar_id_list[index]].amount;

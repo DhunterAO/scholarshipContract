@@ -1,6 +1,5 @@
-pragma solidity >=0.5.0 <0.7.0;
-
-import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+pragma solidity >=0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract Project {
     // create a new struct Scholar to store the information of scholar
@@ -22,15 +21,14 @@ contract Project {
         
     }
 
-    function get_scholar_list() public {
-        return scholar_list 
-        }
-    }
+    // function get_scholar_list() public {
+    //     return scholar_list;
+    // }
 
     // 验证学生并发放对应的奖学金
-    function auto_distribute(uint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1], string memory receiver_string) public payable returns (bool) {
+    function auto_distribute(uint8 scholar_id, string[2] memory proof1, string[2][2] memory proof2, string[2] memory proof3, string[1] memory proof4, string memory receiver_string) public payable returns (bool) {
         // 验证零知识
-        bool success = verify(scholar_id, proof1[2], proof2[2][2], proof3[2], proof4[1]);
+        bool success = verify(scholar_id, proof1, proof2, proof3, proof4);
         require(success == true, "Proof is not correct!");
         
 
@@ -43,29 +41,29 @@ contract Project {
         receiver.transfer(amount);
     }
     
-    function verify(uint8 scholar_id, string memory proof1[2], string memory proof2[2][2], string memory proof3[2], string memory proof4[1]) public returns (bool) {
+    function verify(uint8 scholar_id, string[2] memory proof1, string[2][2] memory proof2, string[2] memory proof3, string[1] memory proof4) public returns (bool) {
         // index: 第几个奖学金
         // proof: 9个字符串形式uint256
         
         bytes4 methodId = bytes4(keccak256("verifyTx(uint256[2],uint256[2][2],uint256[2],uint256[1])"));
         address contract_address = scholar_list[scholar_id].addr;
         
-        uint256 proof1_uint256[2];
+        uint256[2] memory proof1_uint256;
         proof1_uint256[0] = stringToUint256(proof1[0]);
         proof1_uint256[1] = stringToUint256(proof1[1]);
-        uint256 proof2_uint256[2][2];
+        uint256[2][2] memory proof2_uint256;
         proof2_uint256[0][0] = stringToUint256(proof2[0][0]);
         proof2_uint256[0][1] = stringToUint256(proof2[0][1]);
         proof2_uint256[1][0] = stringToUint256(proof2[1][0]);
         proof2_uint256[1][1] = stringToUint256(proof2[1][1]);
-        uint256 proof3_uint256[2];
+        uint256[2] memory proof3_uint256;
         proof3_uint256[0] = stringToUint256(proof3[0]);
         proof3_uint256[1] = stringToUint256(proof3[1]);
-        uint256 proof4_uint256[1];
+        uint256[1] memory proof4_uint256;
         proof4_uint256[0] = stringToUint256(proof4[0]);
         
 
-        (bool success, bytes memory returnData) = contract_address.call(methodId, proof1_uint256[2], proof2_uint256[2][2], proof3_uint256[2], proof4_uint256[1]);
+        (bool success, bytes memory returnData) = contract_address.call(methodId, scholar_id, proof1_uint256, proof2_uint256, proof3_uint256, proof4_uint256);
 
         return success;
     }

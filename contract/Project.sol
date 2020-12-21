@@ -47,7 +47,7 @@ contract Project {
         
         // bytes4 methodId = bytes4(keccak256("verifyTx(uint256[2],uint256[2][2],uint256[2],uint256[1])"));
         bytes4 methodId = bytes4(keccak256("increaseAge(string,uint256)"));
-        address contract_address = scholar_list[scholar_id].addr;
+        address contract1_address = scholar_list[scholar_id].addr;
         
         uint256[2] memory proof1_uint256;
         proof1_uint256[0] = stringToUint256(proof1[0]);
@@ -64,7 +64,7 @@ contract Project {
         proof4_uint256[0] = stringToUint256(proof4[0]);
         
         
-        (bool success, bytes memory returnData) = contract_address.call(abi.encode(methodId, scholar_id, proof1_uint256, proof2_uint256, proof3_uint256, proof4_uint256));
+        (bool success, bytes memory returnData) = contract1_address.call(abi.encode(methodId, scholar_id, proof1_uint256, proof2_uint256, proof3_uint256, proof4_uint256));
 
         return success;
     }

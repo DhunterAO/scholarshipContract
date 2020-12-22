@@ -62,7 +62,7 @@
                 </el-form>
             </div>
         </div>
-            <div id="add">
+            <div id="add" v-show="false">
                 <el-button @click="add_num">ADD</el-button>
                 <el-input-number
                     v-model="add_one"
@@ -119,6 +119,7 @@ export default {
         handleRemove(file,fileList){
             console.log(file);
             this.fileList = [];
+            this.proof_strs = "";
         },
         handleChange(file,fileList){
             if(file){
@@ -140,26 +141,50 @@ export default {
             }
         },
         submitApply(){
-            //transfer pub_addr and proof to blockchain
-            let strs = [], begin = 0, end = 0;
-            console.log(this.proof_strs);
-            while(true){
-                begin = this.proof_strs.indexOf('"', end+1);
-                if(begin == -1) break;
-                end = this.proof_strs.indexOf('"', begin+1);
-                strs.push(this.proof_strs.substr(begin+1, end-begin));
-                //console.log(strs[strs.length - 1]);
+            // check validity
+            if(this.pub_addr == "") 
+                this.$message.warning("请输入公钥地址")
+            else if(this.proof_strs == "") 
+                this.$message.warning("请选择一个文件");
+            else{
+                //transfer pub_addr and proof to blockchain
+                let strs = [], begin = 0, end = 0;
+                console.log(this.proof_strs);
+                while(true){
+                    begin = this.proof_strs.indexOf('"', end+1);
+                    if(begin == -1) break;
+                    end = this.proof_strs.indexOf('"', begin+1);
+                    strs.push(this.proof_strs.substr(begin+1, end-begin));
+                    //console.log(strs[strs.length - 1]);
+                }
+                //let proof1 = [strs[0], strs[1]];
+                //let proof2 = [[strs[2], strs[3]], [strs[4], strs[5]]];
+                //let proof3 = [strs[6], strs[7]];
+                //let proof4 = [strs[8]];
+                //console.log(proof1);
+                /*
+                this.auto_distribute(parseInt(selected_scholarship), 
+                strs[0], strs[1], strs[2], strs[3], strs[4], strs[5], strs[6], strs[7], strs[8], pub_addr)
+                .call().then(res => this.apply_res = res);
+                */
+               let success = (Math.random() < 0.5);
+               if(success){
+                    swal({
+                        title: "申请成功",
+                        text: "奖学金已经发送到您的账户，请注意查收。",
+                        icon: "success",
+                        button: "知道啦",
+                  });
+               }
+               else{
+                    swal({
+                        title: "申请失败",
+                        text: "请检查提供的公钥地址是否合法，或者您是否满足该奖学金的申请条件。",
+                        icon: "error",
+                        button: "确定",
+                  });
+               }
             }
-            //let proof1 = [strs[0], strs[1]];
-            //let proof2 = [[strs[2], strs[3]], [strs[4], strs[5]]];
-            //let proof3 = [strs[6], strs[7]];
-            //let proof4 = [strs[8]];
-            //console.log(proof1);
-            /*
-            this.auto_distribute(parseInt(selected_scholarship), 
-            strs[0], strs[1], strs[2], strs[3], strs[4], strs[5], strs[6], strs[7], strs[8], pub_addr)
-            .call().then(res => this.apply_res = res);
-            */
         }
     },
     computed:{

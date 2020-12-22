@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
+import swal from 'sweetalert'
 import Web3 from 'web3'
 
 import 'element-ui/lib/theme-chalk/index.css'

@@ -194,8 +194,8 @@ export default {
         }
     },
     created(){
-        // get available scholarships from smart contract
-        //this.get_scholarship_list().call().then((ret) => {this.avail_scholarships = ret});
+        // default scholarship list
+        
         this.avail_scholarships = [
             {
                 title: "钟士模奖学金",
@@ -216,6 +216,8 @@ export default {
                 id: "2"
             }
         ]
+        // get available scholarship list from smart contract
+        this.get_scholarship_list().call().then((ret) => {this.avail_scholarships = ret});
     }
 }
 </script>
